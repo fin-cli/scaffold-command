@@ -17,7 +17,7 @@ jobs:
       database:
         image: mysql:latest
         env:
-          MYSQL_DATABASE: wordpress_tests
+          MYSQL_DATABASE: finpress_tests
           MYSQL_ROOT_PASSWORD: root
         ports:
           - 3306:3306
@@ -32,7 +32,7 @@ jobs:
           tools: phpunit-polyfills:1.1
 
       - name: Setup tests
-        run: bash bin/install-wp-tests.sh wordpress_tests root root 127.0.0.1 latest true
+        run: bash bin/install-fp-tests.sh finpress_tests root root 127.0.0.1 latest true
 
       - name: Run tests
         run: phpunit

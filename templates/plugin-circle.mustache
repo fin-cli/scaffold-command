@@ -31,8 +31,8 @@ job-references:
 
   php_job: &php_job
     environment:
-      - WP_TESTS_DIR: "/tmp/wordpress-tests-lib"
-      - WP_CORE_DIR: "/tmp/wordpress/"
+      - FP_TESTS_DIR: "/tmp/finpress-tests-lib"
+      - FP_CORE_DIR: "/tmp/finpress/"
     steps:
       - checkout
       - run: *setup_environment
@@ -41,13 +41,13 @@ job-references:
           name: "Run Tests"
           command: |
             composer global require "phpunit/phpunit=5.7.*"
-            composer global require wp-coding-standards/wpcs
-            phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+            composer global require fp-coding-standards/fpcs
+            phpcs --config-set installed_paths $HOME/.composer/vendor/fp-coding-standards/fpcs
             phpcs
-            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
-            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest
+            rm -rf $FP_TESTS_DIR $FP_CORE_DIR
+            bash bin/install-fp-tests.sh finpress_test root '' 127.0.0.1 latest
             phpunit
-            WP_MULTISITE=1 phpunit
+            FP_MULTISITE=1 phpunit
 
 jobs:
   php56-build:
@@ -63,17 +63,17 @@ jobs:
           name: "Run Tests"
           command: |
             composer global require "phpunit/phpunit=5.7.*"
-            composer global require wp-coding-standards/wpcs
-            phpcs --config-set installed_paths $HOME/.composer/vendor/wp-coding-standards/wpcs
+            composer global require fp-coding-standards/fpcs
+            phpcs --config-set installed_paths $HOME/.composer/vendor/fp-coding-standards/fpcs
             phpcs
             SKIP_DB_CREATE=false
-            {{#wp_versions_to_test}}
-            rm -rf $WP_TESTS_DIR $WP_CORE_DIR
-            bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 {{.}} $SKIP_DB_CREATE
+            {{#fp_versions_to_test}}
+            rm -rf $FP_TESTS_DIR $FP_CORE_DIR
+            bash bin/install-fp-tests.sh finpress_test root '' 127.0.0.1 {{.}} $SKIP_DB_CREATE
             phpunit
-            WP_MULTISITE=1 phpunit
+            FP_MULTISITE=1 phpunit
             SKIP_DB_CREATE=true
-            {{/wp_versions_to_test}}
+            {{/fp_versions_to_test}}
 
   php70-build:
     <<: *php_job

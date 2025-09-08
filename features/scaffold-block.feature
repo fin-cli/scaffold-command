@@ -1,45 +1,45 @@
-Feature: WordPress block code scaffolding
+Feature: FinPress block code scaffolding
 
   Background:
-    Given a WP install
-    And I run `wp scaffold plugin movies`
-    And I run `wp plugin path movies --dir`
+    Given a FP install
+    And I run `fp scaffold plugin movies`
+    And I run `fp plugin path movies --dir`
     And save STDOUT as {PLUGIN_DIR}
-    And I run `wp theme install twentytwelve --activate --force`
-    And I run `wp theme path twentytwelve --dir`
+    And I run `fp theme install twentytwelve --activate --force`
+    And I run `fp theme path twentytwelve --dir`
     And save STDOUT as {THEME_DIR}
 
   Scenario: Scaffold a block with an invalid slug
-    When I try `wp scaffold block The_Godfather`
+    When I try `fp scaffold block The_Godfather`
     Then STDERR should be:
       """
       Error: Invalid block slug specified. Block slugs can contain only lowercase alphanumeric characters or dashes, and start with a letter.
       """
 
   Scenario: Scaffold a block with a missing plugin and theme
-    When I try `wp scaffold block the-godfather`
+    When I try `fp scaffold block the-godfather`
     Then STDERR should be:
       """
       Error: No plugin or theme selected.
       """
 
   Scenario: Scaffold a block for an invalid plugin
-    When I try `wp scaffold block the-godfather --plugin=unknown`
+    When I try `fp scaffold block the-godfather --plugin=unknown`
     Then STDERR should be:
       """
       Error: Can't find 'unknown' plugin.
       """
 
   Scenario: Scaffold a block for an invalid plugin slug
-    When I run `wp scaffold plugin plugin.name.with.dots`
-    And I try `wp scaffold block some-block --plugin=plugin.name.with.dots`
+    When I run `fp scaffold plugin plugin.name.with.dots`
+    And I try `fp scaffold block some-block --plugin=plugin.name.with.dots`
     Then STDERR should contain:
       """
       Error: Invalid plugin name specified.
       """
 
   Scenario: Scaffold a block for a specific plugin
-    When I run `wp scaffold block the-green-mile --plugin=movies`
+    When I run `fp scaffold block the-green-mile --plugin=movies`
     Then the {PLUGIN_DIR}/blocks/the-green-mile.php file should exist
     And the {PLUGIN_DIR}/blocks/the-green-mile.php file should contain:
       """
@@ -89,12 +89,12 @@ Feature: WordPress block code scaffolding
     And the {PLUGIN_DIR}/blocks/the-green-mile/editor.css file should exist
     And the {PLUGIN_DIR}/blocks/the-green-mile/editor.css file should contain:
       """
-      .wp-block-movies-the-green-mile {
+      .fp-block-movies-the-green-mile {
       """
     And the {PLUGIN_DIR}/blocks/the-green-mile/style.css file should exist
     And the {PLUGIN_DIR}/blocks/the-green-mile/style.css file should contain:
       """
-      .wp-block-movies-the-green-mile {
+      .fp-block-movies-the-green-mile {
       """
     And STDOUT should be:
       """
@@ -102,7 +102,7 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Scaffold a block with a specific title provided
-    When I run `wp scaffold block shawshank-redemption --plugin=movies --title="The Shawshank Redemption"`
+    When I run `fp scaffold block shawshank-redemption --plugin=movies --title="The Shawshank Redemption"`
     Then the {PLUGIN_DIR}/blocks/shawshank-redemption/index.js file should contain:
       """
       title: __( 'The Shawshank Redemption', 'movies' ),
@@ -113,7 +113,7 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Scaffold a block with a specific dashicon provided
-    When I run `wp scaffold block forrest-gump --plugin=movies --dashicon=movie`
+    When I run `fp scaffold block forrest-gump --plugin=movies --dashicon=movie`
     Then the {PLUGIN_DIR}/blocks/forrest-gump/index.js file should contain:
       """
       icon: 'movie',
@@ -124,7 +124,7 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Scaffold a block with a specific category provided
-    When I run `wp scaffold block pulp-fiction --plugin=movies --category=embed`
+    When I run `fp scaffold block pulp-fiction --plugin=movies --category=embed`
     Then the {PLUGIN_DIR}/blocks/pulp-fiction/index.js file should contain:
       """
       category: 'embed',
@@ -135,7 +135,7 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Scaffold a block for an active theme
-    When I run `wp scaffold block fight-club --theme`
+    When I run `fp scaffold block fight-club --theme`
     Then the {THEME_DIR}/blocks/fight-club.php file should exist
     And the {THEME_DIR}/blocks/fight-club/index.js file should exist
     And the {THEME_DIR}/blocks/fight-club/editor.css file should exist
@@ -146,14 +146,14 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Scaffold a block for an invalid theme
-    When I try `wp scaffold block intouchables --theme=unknown`
+    When I try `fp scaffold block intouchables --theme=unknown`
     Then STDERR should be:
       """
       Error: Can't find 'unknown' theme.
       """
 
   Scenario: Scaffold a block for a specific theme
-    When I run `wp scaffold block intouchables --theme=twentytwelve`
+    When I run `fp scaffold block intouchables --theme=twentytwelve`
     Then the {THEME_DIR}/blocks/intouchables.php file should exist
     And the {THEME_DIR}/blocks/intouchables/index.js file should exist
     And the {THEME_DIR}/blocks/intouchables/editor.css file should exist
@@ -164,8 +164,8 @@ Feature: WordPress block code scaffolding
       """
 
   Scenario: Plugin- or theme-specific functions are only used in the correct context
-    When I run `wp scaffold block plugin-block --plugin=movies`
-    And I run `wp scaffold block theme-block --theme=twentytwelve`
+    When I run `fp scaffold block plugin-block --plugin=movies`
+    And I run `fp scaffold block theme-block --theme=twentytwelve`
     Then the {PLUGIN_DIR}/blocks/plugin-block.php file should contain:
       """
       plugins_url

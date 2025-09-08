@@ -1,12 +1,12 @@
-Feature: WordPress code scaffolding
+Feature: FinPress code scaffolding
 
   @theme
   Scenario: Scaffold a child theme
-    Given a WP install
-    And I run `wp theme path`
+    Given a FP install
+    And I run `fp theme path`
     And save STDOUT as {THEME_DIR}
 
-    When I run `wp scaffold child-theme zombieland --parent_theme=umbrella --theme_name=Zombieland --author=Tallahassee --author_uri=https://wp-cli.org --theme_uri=http://www.zombieland.com`
+    When I run `fp scaffold child-theme zombieland --parent_theme=umbrella --theme_name=Zombieland --author=Tallahassee --author_uri=https://fp-cli.org --theme_uri=http://www.zombieland.com`
     Then the {THEME_DIR}/zombieland/style.css file should exist
     And the {THEME_DIR}/zombieland/functions.php file should exist
     And STDOUT should be:
@@ -16,11 +16,11 @@ Feature: WordPress code scaffolding
     And the {THEME_DIR}/zombieland/.editorconfig file should exist
 
   Scenario: Scaffold a child theme with only --parent_theme parameter
-    Given a WP install
-    And I run `wp theme path`
+    Given a FP install
+    And I run `fp theme path`
     And save STDOUT as {THEME_DIR}
 
-    When I run `wp scaffold child-theme hello-world --parent_theme=simple-life`
+    When I run `fp scaffold child-theme hello-world --parent_theme=simple-life`
     Then STDOUT should not be empty
     And the {THEME_DIR}/hello-world/style.css file should exist
     And the {THEME_DIR}/hello-world/style.css file should contain:
@@ -29,9 +29,9 @@ Feature: WordPress code scaffolding
       """
 
   Scenario: Scaffold a child theme with non existing parent theme and also activate parameter
-    Given a WP install
+    Given a FP install
 
-    When I try `wp scaffold child-theme hello-world --parent_theme=just-test --activate --quiet`
+    When I try `fp scaffold child-theme hello-world --parent_theme=just-test --activate --quiet`
     Then STDERR should contain:
       """
       Error: The parent theme is missing. Please install the "just-test" parent theme.
@@ -39,35 +39,35 @@ Feature: WordPress code scaffolding
     And the return code should be 1
 
   Scenario: Scaffold a child theme with non existing parent theme and also network activate parameter
-    Given a WP install
+    Given a FP install
 
-    When I try `wp scaffold child-theme hello-world --parent_theme=just-test --enable-network --quiet`
+    When I try `fp scaffold child-theme hello-world --parent_theme=just-test --enable-network --quiet`
     Then STDERR should contain:
       """
       Error: This is not a multisite install
       """
     And the return code should be 1
 
-  @require-wp-4.6
+  @require-fp-4.6
   Scenario: Scaffold a child theme and network enable it
-    Given a WP multisite install
+    Given a FP multisite install
 
-    When I run `wp scaffold child-theme zombieland --parent_theme=umbrella --theme_name=Zombieland --author=Tallahassee --author_uri=https://wp-cli.org --theme_uri=http://www.zombieland.com --enable-network`
+    When I run `fp scaffold child-theme zombieland --parent_theme=umbrella --theme_name=Zombieland --author=Tallahassee --author_uri=https://fp-cli.org --theme_uri=http://www.zombieland.com --enable-network`
     Then STDOUT should contain:
       """
       Success: Network enabled the 'Zombieland' theme.
       """
 
   Scenario: Scaffold a child theme with invalid slug
-    Given a WP install
-    When I try `wp scaffold child-theme . --parent_theme=simple-life`
+    Given a FP install
+    When I try `fp scaffold child-theme . --parent_theme=simple-life`
     Then STDERR should contain:
       """
       Error: Invalid theme slug specified.
       """
     And the return code should be 1
 
-    When I try `wp scaffold child-theme ../ --parent_theme=simple-life`
+    When I try `fp scaffold child-theme ../ --parent_theme=simple-life`
     Then STDERR should contain:
       """
       Error: Invalid theme slug specified.
@@ -76,21 +76,21 @@ Feature: WordPress code scaffolding
 
   @tax @cpt
   Scenario: Scaffold a Custom Taxonomy and Custom Post Type and write it to active theme
-    Given a WP install
-    And I run `wp eval 'echo STYLESHEETPATH;'`
+    Given a FP install
+    And I run `fp eval 'echo STYLESHEETPATH;'`
     And save STDOUT as {STYLESHEETPATH}
 
-    When I run `wp scaffold taxonomy zombie-speed --theme`
+    When I run `fp scaffold taxonomy zombie-speed --theme`
     Then the {STYLESHEETPATH}/taxonomies/zombie-speed.php file should exist
 
-    When I run `wp scaffold post-type zombie --theme`
+    When I run `fp scaffold post-type zombie --theme`
     Then the {STYLESHEETPATH}/post-types/zombie.php file should exist
     And STDOUT should be:
       """
       Success: Created '{STYLESHEETPATH}/post-types/zombie.php'.
       """
 
-    When I run `wp scaffold post-type zombie`
+    When I run `fp scaffold post-type zombie`
     Then STDOUT should contain:
       """
       'rest_base'             => 'zombie'
@@ -99,7 +99,7 @@ Feature: WordPress code scaffolding
       """
       add_filter( 'post_updated_messages'
       """
-    When I run `wp scaffold post-type zombie --raw`
+    When I run `fp scaffold post-type zombie --raw`
     Then STDOUT should not contain:
       """
       add_filter( 'post_updated_messages'
@@ -108,8 +108,8 @@ Feature: WordPress code scaffolding
   # Test for all flags but --label, --theme, --plugin and --raw
   @tax
   Scenario: Scaffold a Custom Taxonomy and attach it to CPTs including one that is prefixed and has a text domain
-    Given a WP install
-    When I run `wp scaffold taxonomy zombie-speed --post_types="prefix-zombie,wraith" --textdomain=zombieland`
+    Given a FP install
+    When I run `fp scaffold taxonomy zombie-speed --post_types="prefix-zombie,wraith" --textdomain=zombieland`
     Then STDOUT should contain:
       """
       __( 'Zombie speeds'
@@ -125,8 +125,8 @@ Feature: WordPress code scaffolding
 
   @tax
   Scenario: Scaffold a Custom Taxonomy with label "Speed"
-    Given a WP install
-    When I run `wp scaffold taxonomy zombie-speed --label="Speed"`
+    Given a FP install
+    When I run `fp scaffold taxonomy zombie-speed --label="Speed"`
     Then STDOUT should contain:
       """
       __( 'Speeds'
@@ -139,8 +139,8 @@ Feature: WordPress code scaffolding
   # Test for all flags but --label, --theme, --plugin and --raw
   @cpt
   Scenario: Scaffold a Custom Post Type
-    Given a WP install
-    When I run `wp scaffold post-type zombie --textdomain=zombieland`
+    Given a FP install
+    When I run `fp scaffold post-type zombie --textdomain=zombieland`
     Then STDOUT should contain:
       """
       __( 'Zombies'
@@ -155,8 +155,8 @@ Feature: WordPress code scaffolding
       """
 
   Scenario: CPT slug is too long
-    Given a WP install
-    When I try `wp scaffold post-type slugiswaytoolonginfact`
+    Given a FP install
+    When I try `fp scaffold post-type slugiswaytoolonginfact`
     Then STDERR should be:
       """
       Error: Post type slugs cannot exceed 20 characters in length.
@@ -165,45 +165,45 @@ Feature: WordPress code scaffolding
 
   @cpt
   Scenario: Scaffold a Custom Post Type with label
-    Given a WP install
-    When I run `wp scaffold post-type zombie --label="Brain eater"`
+    Given a FP install
+    When I run `fp scaffold post-type zombie --label="Brain eater"`
     Then STDOUT should contain:
       """
       __( 'Brain eaters'
       """
 
   Scenario: Scaffold a Custom Post Type with dashicon
-    Given a WP install
-    When I run `wp scaffold post-type zombie --dashicon="art"`
+    Given a FP install
+    When I run `fp scaffold post-type zombie --dashicon="art"`
     Then STDOUT should contain:
       """
       'menu_icon'             => 'dashicons-art',
       """
 
   Scenario: Scaffold a Custom Post Type with dashicon in the case of passing "dashicon-info"
-    Given a WP install
-    When I run `wp scaffold post-type zombie --dashicon="dashicon-info"`
+    Given a FP install
+    When I run `fp scaffold post-type zombie --dashicon="dashicon-info"`
     Then STDOUT should contain:
       """
       'menu_icon'             => 'dashicons-info',
       """
 
   Scenario: Scaffold a Custom Post Type with dashicon in the case of passing "dashicons-info"
-    Given a WP install
-    When I run `wp scaffold post-type zombie --dashicon="dashicons-info"`
+    Given a FP install
+    When I run `fp scaffold post-type zombie --dashicon="dashicons-info"`
     Then STDOUT should contain:
       """
       'menu_icon'             => 'dashicons-info',
       """
 
   Scenario: Scaffold a plugin
-    Given a WP install
-    And I run `wp plugin path`
+    Given a FP install
+    And I run `fp plugin path`
     And save STDOUT as {PLUGIN_DIR}
-    And I run `wp core version`
-    And save STDOUT as {WP_VERSION}
+    And I run `fp core version`
+    And save STDOUT as {FP_VERSION}
 
-    When I run `wp scaffold plugin hello-world --plugin_author="Hello World Author"`
+    When I run `fp scaffold plugin hello-world --plugin_author="Hello World Author"`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/hello-world/.gitignore file should exist
     And the {PLUGIN_DIR}/hello-world/.editorconfig file should exist
@@ -216,7 +216,7 @@ Feature: WordPress code scaffolding
       phpcs.xml
       phpunit.xml
       Thumbs.db
-      wp-cli.local.yml
+      fp-cli.local.yml
       node_modules/
       vendor/
       """
@@ -227,7 +227,7 @@ Feature: WordPress code scaffolding
       """
     And the {PLUGIN_DIR}/hello-world/.phpcs.xml.dist file should contain:
       """
-      	<rule ref="PHPCompatibilityWP"/>
+      	<rule ref="PHPCompatibilityFP"/>
       """
     And the {PLUGIN_DIR}/hello-world/.phpcs.xml.dist file should contain:
       """
@@ -251,26 +251,26 @@ Feature: WordPress code scaffolding
       """
     And the {PLUGIN_DIR}/hello-world/readme.txt file should contain:
       """
-      Tested up to: {WP_VERSION}
+      Tested up to: {FP_VERSION}
       """
 
     When I run `cat {PLUGIN_DIR}/hello-world/composer.json`
     Then STDOUT should contain:
       """
-      wp-cli/i18n-command
+      fp-cli/i18n-command
       """
 
   Scenario: Scaffold a plugin by prompting
-    Given a WP install
+    Given a FP install
     And a session file:
       """
       hello-world
 
       Hello World
-      An awesome introductory plugin for WordPress
-      WP-CLI
-      https://wp-cli.org
-      https://wp-cli.org
+      An awesome introductory plugin for FinPress
+      FP-CLI
+      https://fp-cli.org
+      https://fp-cli.org
       n
       circle
       Y
@@ -278,13 +278,13 @@ Feature: WordPress code scaffolding
       n
       """
 
-    When I run `wp scaffold plugin --prompt < session`
+    When I run `fp scaffold plugin --prompt < session`
     Then STDOUT should not be empty
-    And the wp-content/plugins/hello-world/hello-world.php file should exist
-    And the wp-content/plugins/hello-world/readme.txt file should exist
-    And the wp-content/plugins/hello-world/tests directory should exist
+    And the fp-content/plugins/hello-world/hello-world.php file should exist
+    And the fp-content/plugins/hello-world/readme.txt file should exist
+    And the fp-content/plugins/hello-world/tests directory should exist
 
-    When I run `wp plugin status hello-world`
+    When I run `fp plugin status hello-world`
     Then STDOUT should contain:
       """
       Status: Active
@@ -295,50 +295,50 @@ Feature: WordPress code scaffolding
       """
     And STDOUT should contain:
       """
-      Description: An awesome introductory plugin for WordPress
+      Description: An awesome introductory plugin for FinPress
       """
 
   Scenario: Scaffold a plugin and activate it
-    Given a WP install
-    When I run `wp scaffold plugin hello-world --activate`
+    Given a FP install
+    When I run `fp scaffold plugin hello-world --activate`
     Then STDOUT should contain:
       """
       Plugin 'hello-world' activated.
       """
 
-  @require-wp-4.6
+  @require-fp-4.6
   Scenario: Scaffold a plugin and network activate it
-    Given a WP multisite install
-    When I run `wp scaffold plugin hello-world --activate-network`
+    Given a FP multisite install
+    When I run `fp scaffold plugin hello-world --activate-network`
     Then STDOUT should contain:
       """
       Plugin 'hello-world' network activated.
       """
 
   Scenario: Scaffold a plugin with invalid slug
-    Given a WP install
-    When I try `wp scaffold plugin .`
+    Given a FP install
+    When I try `fp scaffold plugin .`
     Then STDERR should contain:
       """
       Error: Invalid plugin slug specified.
       """
     And the return code should be 1
 
-    When I try `wp scaffold plugin ../`
+    When I try `fp scaffold plugin ../`
     Then STDERR should contain:
       """
       Error: Invalid plugin slug specified.
       """
     And the return code should be 1
 
-  @require-php-5.6 @require-wp-4.6
+  @require-php-5.6 @require-fp-4.6
   Scenario: Scaffold starter code for a theme
-    Given a WP install
-    And I run `wp theme path`
+    Given a FP install
+    And I run `fp theme path`
     And save STDOUT as {THEME_DIR}
 
-    # Allow for warnings to be generated due to https://github.com/wp-cli/scaffold-command/issues/181
-    When I try `wp scaffold _s starter-theme`
+    # Allow for warnings to be generated due to https://github.com/fp-cli/scaffold-command/issues/181
+    When I try `fp scaffold _s starter-theme`
     Then STDOUT should contain:
       """
       Success: Created theme 'Starter-theme'.
@@ -346,28 +346,28 @@ Feature: WordPress code scaffolding
     And the {THEME_DIR}/starter-theme/style.css file should exist
     And the {THEME_DIR}/starter-theme/.editorconfig file should exist
 
-  @require-php-5.6 @require-wp-4.6
+  @require-php-5.6 @require-fp-4.6
   Scenario: Scaffold starter code for a theme with sass
-    Given a WP install
-    And I run `wp theme path`
+    Given a FP install
+    And I run `fp theme path`
     And save STDOUT as {THEME_DIR}
 
-    # Allow for warnings to be generated due to https://github.com/wp-cli/scaffold-command/issues/181
-    When I try `wp scaffold _s starter-theme --sassify`
+    # Allow for warnings to be generated due to https://github.com/fp-cli/scaffold-command/issues/181
+    When I try `fp scaffold _s starter-theme --sassify`
     Then STDOUT should contain:
       """
       Success: Created theme 'Starter-theme'.
       """
     And the {THEME_DIR}/starter-theme/sass directory should exist
 
-  @require-php-5.6 @require-wp-4.6
+  @require-php-5.6 @require-fp-4.6
   Scenario: Scaffold starter code for a WooCommerce theme
-    Given a WP install
-    And I run `wp theme path`
+    Given a FP install
+    And I run `fp theme path`
     And save STDOUT as {THEME_DIR}
 
-    # Allow for warnings to be generated due to https://github.com/wp-cli/scaffold-command/issues/181
-    When I try `wp scaffold _s starter-theme --woocommerce`
+    # Allow for warnings to be generated due to https://github.com/fp-cli/scaffold-command/issues/181
+    When I try `fp scaffold _s starter-theme --woocommerce`
     Then STDOUT should contain:
       """
       Success: Created theme 'Starter-theme'.
@@ -375,33 +375,33 @@ Feature: WordPress code scaffolding
     And the {THEME_DIR}/starter-theme/woocommerce.css file should exist
     And the {THEME_DIR}/starter-theme/inc/woocommerce.php file should exist
 
-  @require-php-5.6 @require-wp-4.6 @require-mysql
+  @require-php-5.6 @require-fp-4.6 @require-mysql
   Scenario: Scaffold starter code for a theme and activate it
-    Given a WP install
-    # Allow for warnings to be generated due to https://github.com/wp-cli/scaffold-command/issues/181
-    When I try `wp scaffold _s starter-theme --activate`
+    Given a FP install
+    # Allow for warnings to be generated due to https://github.com/fp-cli/scaffold-command/issues/181
+    When I try `fp scaffold _s starter-theme --activate`
     Then STDOUT should contain:
       """
       Success: Switched to 'Starter-theme' theme.
       """
 
   Scenario: Scaffold starter code for a theme with invalid slug
-    Given a WP install
-    When I try `wp scaffold _s .`
+    Given a FP install
+    When I try `fp scaffold _s .`
     Then STDERR should contain:
       """
       Error: Invalid theme slug specified.
       """
     And the return code should be 1
 
-    When I try `wp scaffold _s ../`
+    When I try `fp scaffold _s ../`
     Then STDERR should contain:
       """
       Error: Invalid theme slug specified.
       """
     And the return code should be 1
 
-    When I try `wp scaffold _s 1themestartingwithnumber`
+    When I try `fp scaffold _s 1themestartingwithnumber`
     Then STDERR should contain:
       """
       Error: Invalid theme slug specified. Theme slugs can only contain letters, numbers, underscores and hyphens, and can only start with a letter or underscore.
@@ -409,35 +409,35 @@ Feature: WordPress code scaffolding
     And the return code should be 1
 
   Scenario: Scaffold plugin and tests for non-standard plugin directory
-    Given a WP install
+    Given a FP install
 
-    When I run `wp scaffold plugin custom-plugin --dir=wp-content/mu-plugins --skip-tests`
+    When I run `fp scaffold plugin custom-plugin --dir=fp-content/mu-plugins --skip-tests`
     Then STDOUT should not be empty
-    And the wp-content/mu-plugins/custom-plugin/custom-plugin.php file should exist
-    And the wp-content/mu-plugins/custom-plugin/tests directory should not exist
+    And the fp-content/mu-plugins/custom-plugin/custom-plugin.php file should exist
+    And the fp-content/mu-plugins/custom-plugin/tests directory should not exist
 
-    When I try `wp scaffold plugin-tests --dir=wp-content/mu-plugins/incorrect-custom-plugin`
+    When I try `fp scaffold plugin-tests --dir=fp-content/mu-plugins/incorrect-custom-plugin`
     Then STDERR should contain:
       """
       Error: Invalid plugin directory specified.
       """
     And the return code should be 1
 
-    When I run `wp scaffold plugin-tests --dir=wp-content/mu-plugins/custom-plugin`
+    When I run `fp scaffold plugin-tests --dir=fp-content/mu-plugins/custom-plugin`
     Then STDOUT should contain:
       """
       Success: Created test files.
       """
-    And the wp-content/mu-plugins/custom-plugin/tests directory should exist
-    And the wp-content/mu-plugins/custom-plugin/tests/bootstrap.php file should exist
-    And the wp-content/mu-plugins/custom-plugin/tests/bootstrap.php file should contain:
+    And the fp-content/mu-plugins/custom-plugin/tests directory should exist
+    And the fp-content/mu-plugins/custom-plugin/tests/bootstrap.php file should exist
+    And the fp-content/mu-plugins/custom-plugin/tests/bootstrap.php file should contain:
       """
       require dirname( dirname( __FILE__ ) ) . '/custom-plugin.php';
       """
 
   Scenario: Scaffold tests for a plugin with a different slug than plugin directory
-    Given a WP install
-    And a wp-content/mu-plugins/custom-plugin2/custom-plugin-slug.php file:
+    Given a FP install
+    And a fp-content/mu-plugins/custom-plugin2/custom-plugin-slug.php file:
       """
       <?php
       /**
@@ -447,26 +447,26 @@ Feature: WordPress code scaffolding
        */
       """
 
-    When I run `wp scaffold plugin-tests custom-plugin-slug --dir=wp-content/mu-plugins/custom-plugin2`
+    When I run `fp scaffold plugin-tests custom-plugin-slug --dir=fp-content/mu-plugins/custom-plugin2`
     Then STDOUT should contain:
       """
       Success: Created test files.
       """
-    And the wp-content/mu-plugins/custom-plugin2/tests directory should exist
-    And the wp-content/mu-plugins/custom-plugin2/tests/bootstrap.php file should exist
-    And the wp-content/mu-plugins/custom-plugin2/tests/bootstrap.php file should contain:
+    And the fp-content/mu-plugins/custom-plugin2/tests directory should exist
+    And the fp-content/mu-plugins/custom-plugin2/tests/bootstrap.php file should exist
+    And the fp-content/mu-plugins/custom-plugin2/tests/bootstrap.php file should contain:
       """
       require dirname( dirname( __FILE__ ) ) . '/custom-plugin-slug.php';
       """
 
   Scenario: Scaffold tests parses plugin readme.txt
-    Given a WP install
-    When I run `wp core version`
-    Then save STDOUT as {WP_VERSION}
-    When I run `wp plugin path`
+    Given a FP install
+    When I run `fp core version`
+    Then save STDOUT as {FP_VERSION}
+    When I run `fp plugin path`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin hello-world`
+    When I run `fp scaffold plugin hello-world`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/hello-world/readme.txt file should exist
     And the {PLUGIN_DIR}/hello-world/.circleci/config.yml file should exist
@@ -484,21 +484,21 @@ Feature: WordPress code scaffolding
             - php74-build
       """
 
-  @require-php-5.6 @require-wp-4.6
+  @require-php-5.6 @require-fp-4.6
   Scenario: Scaffold starter code for a theme and network enable it
-    Given a WP multisite install
-    # Allow for warnings to be generated due to https://github.com/wp-cli/scaffold-command/issues/181
-    When I try `wp scaffold _s starter-theme --enable-network`
+    Given a FP multisite install
+    # Allow for warnings to be generated due to https://github.com/fp-cli/scaffold-command/issues/181
+    When I try `fp scaffold _s starter-theme --enable-network`
     Then STDOUT should contain:
       """
       Success: Network enabled the 'Starter-theme' theme.
       """
 
-  @require-php-5.6 @require-wp-4.6 @require-mysql
+  @require-php-5.6 @require-fp-4.6 @require-mysql
   Scenario: Scaffold starter code for a theme, but can't unzip theme files
-    Given a WP install
-    And a misconfigured WP_CONTENT_DIR constant directory
-    When I try `wp scaffold _s starter-theme`
+    Given a FP install
+    And a misconfigured FP_CONTENT_DIR constant directory
+    When I try `fp scaffold _s starter-theme`
     Then STDERR should contain:
       """
       Error: Could not decompress your theme files
@@ -506,9 +506,9 @@ Feature: WordPress code scaffolding
     And the return code should be 1
 
   Scenario: Overwrite existing files
-    Given a WP install
-    When I run `wp scaffold plugin test`
-    And I try `wp scaffold plugin test --force`
+    Given a FP install
+    When I run `fp scaffold plugin test`
+    And I try `fp scaffold plugin test --force`
     Then STDERR should contain:
       """
       already exists
@@ -520,9 +520,9 @@ Feature: WordPress code scaffolding
     And the return code should be 0
 
   Scenario: Scaffold tests for invalid plugin directory
-    Given a WP install
+    Given a FP install
 
-    When I try `wp scaffold plugin-tests incorrect-custom-plugin`
+    When I try `fp scaffold plugin-tests incorrect-custom-plugin`
     Then STDERR should contain:
       """
       Error: Invalid plugin slug specified.

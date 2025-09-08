@@ -1,18 +1,18 @@
 Feature: Scaffold a custom taxonomy
 
   Scenario: Scaffold a taxonomy that uses Doctrine pluralization
-    Given a WP install
+    Given a FP install
 
-    When I run `wp scaffold taxonomy fungus --raw`
+    When I run `fp scaffold taxonomy fungus --raw`
     Then STDOUT should contain:
       """
       __( 'Popular Fungi'
       """
 
   Scenario: Extended scaffolded taxonomy includes term_updated_messages
-    Given a WP install
+    Given a FP install
 
-    When I run `wp scaffold taxonomy fungus`
+    When I run `fp scaffold taxonomy fungus`
     Then STDOUT should contain:
       """
       add_filter( 'term_updated_messages', 'fungus_updated_messages' );

@@ -1,9 +1,9 @@
-wp-cli/scaffold-command
+fp-cli/scaffold-command
 =======================
 
 Generates code for post types, taxonomies, blocks, plugins, child themes, etc.
 
-[![Testing](https://github.com/wp-cli/scaffold-command/actions/workflows/testing.yml/badge.svg)](https://github.com/wp-cli/scaffold-command/actions/workflows/testing.yml)
+[![Testing](https://github.com/fp-cli/scaffold-command/actions/workflows/testing.yml/badge.svg)](https://github.com/fp-cli/scaffold-command/actions/workflows/testing.yml)
 
 Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contributing) | [Support](#support)
 
@@ -11,37 +11,37 @@ Quick links: [Using](#using) | [Installing](#installing) | [Contributing](#contr
 
 This package implements the following commands:
 
-### wp scaffold
+### fp scaffold
 
 Generates code for post types, taxonomies, plugins, child themes, etc.
 
 ~~~
-wp scaffold
+fp scaffold
 ~~~
 
 **EXAMPLES**
 
     # Generate a new plugin with unit tests.
-    $ wp scaffold plugin sample-plugin
+    $ fp scaffold plugin sample-plugin
     Success: Created plugin files.
     Success: Created test files.
 
     # Generate theme based on _s.
-    $ wp scaffold _s sample-theme --theme_name="Sample Theme" --author="John Doe"
+    $ fp scaffold _s sample-theme --theme_name="Sample Theme" --author="John Doe"
     Success: Created theme 'Sample Theme'.
 
     # Generate code for post type registration in given theme.
-    $ wp scaffold post-type movie --label=Movie --theme=simple-life
-    Success: Created '/var/www/example.com/public_html/wp-content/themes/simple-life/post-types/movie.php'.
+    $ fp scaffold post-type movie --label=Movie --theme=simple-life
+    Success: Created '/var/www/example.com/public_html/fp-content/themes/simple-life/post-types/movie.php'.
 
 
 
-### wp scaffold underscores
+### fp scaffold underscores
 
 Generates starter code for a theme based on _s.
 
 ~~~
-wp scaffold underscores <slug> [--activate] [--enable-network] [--theme_name=<title>] [--author=<full-name>] [--author_uri=<uri>] [--sassify] [--woocommerce] [--force]
+fp scaffold underscores <slug> [--activate] [--enable-network] [--theme_name=<title>] [--author=<full-name>] [--author_uri=<uri>] [--sassify] [--woocommerce] [--force]
 ~~~
 
 See the [Underscores website](https://underscores.me/) for more details.
@@ -78,24 +78,24 @@ See the [Underscores website](https://underscores.me/) for more details.
 **EXAMPLES**
 
     # Generate a theme with name "Sample Theme" and author "John Doe"
-    $ wp scaffold _s sample-theme --theme_name="Sample Theme" --author="John Doe"
+    $ fp scaffold _s sample-theme --theme_name="Sample Theme" --author="John Doe"
     Success: Created theme 'Sample Theme'.
 
 
 
-### wp scaffold block
+### fp scaffold block
 
 Generates PHP, JS and CSS code for registering a Gutenberg block for a plugin or theme.
 
 ~~~
-wp scaffold block <slug> [--title=<title>] [--dashicon=<dashicon>] [--category=<category>] [--theme] [--plugin=<plugin>] [--force]
+fp scaffold block <slug> [--title=<title>] [--dashicon=<dashicon>] [--category=<category>] [--theme] [--plugin=<plugin>] [--force]
 ~~~
 
-**Warning: `wp scaffold block` is deprecated.**
+**Warning: `fp scaffold block` is deprecated.**
 
-The official script to generate a block is the [@wordpress/create-block](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-create-block/) package.
+The official script to generate a block is the [@finpress/create-block](https://developer.finpress.org/block-editor/reference-guides/packages/packages-create-block/) package.
 
-See the [Create a Block tutorial](https://developer.wordpress.org/block-editor/getting-started/tutorial/) for a complete walk-through.
+See the [Create a Block tutorial](https://developer.finpress.org/block-editor/getting-started/tutorial/) for a complete walk-through.
 
 **OPTIONS**
 
@@ -131,12 +131,12 @@ See the [Create a Block tutorial](https://developer.wordpress.org/block-editor/g
 
 
 
-### wp scaffold child-theme
+### fp scaffold child-theme
 
 Generates child theme based on an existing theme.
 
 ~~~
-wp scaffold child-theme <slug> --parent_theme=<slug> [--theme_name=<title>] [--author=<full-name>] [--author_uri=<uri>] [--theme_uri=<uri>] [--activate] [--enable-network] [--force]
+fp scaffold child-theme <slug> --parent_theme=<slug> [--theme_name=<title>] [--author=<full-name>] [--author_uri=<uri>] [--theme_uri=<uri>] [--activate] [--enable-network] [--force]
 ~~~
 
 Creates a child theme folder with `functions.php` and `style.css` files.
@@ -173,25 +173,25 @@ Creates a child theme folder with `functions.php` and `style.css` files.
 **EXAMPLES**
 
     # Generate a 'sample-theme' child theme based on TwentySixteen
-    $ wp scaffold child-theme sample-theme --parent_theme=twentysixteen
-    Success: Created '/var/www/example.com/public_html/wp-content/themes/sample-theme'.
+    $ fp scaffold child-theme sample-theme --parent_theme=twentysixteen
+    Success: Created '/var/www/example.com/public_html/fp-content/themes/sample-theme'.
 
 
 
-### wp scaffold plugin
+### fp scaffold plugin
 
 Generates starter code for a plugin.
 
 ~~~
-wp scaffold plugin <slug> [--dir=<dirname>] [--plugin_name=<title>] [--plugin_description=<description>] [--plugin_author=<author>] [--plugin_author_uri=<url>] [--plugin_uri=<url>] [--skip-tests] [--ci=<provider>] [--activate] [--activate-network] [--force]
+fp scaffold plugin <slug> [--dir=<dirname>] [--plugin_name=<title>] [--plugin_description=<description>] [--plugin_author=<author>] [--plugin_author_uri=<url>] [--plugin_uri=<url>] [--skip-tests] [--ci=<provider>] [--activate] [--activate-network] [--force]
 ~~~
 
 The following files are always generated:
 
 * `plugin-slug.php` is the main PHP plugin file.
 * `readme.txt` is the readme file for the plugin.
-* `package.json` needed by NPM holds various metadata relevant to the project. Packages: `grunt`, `grunt-wp-i18n` and `grunt-wp-readme-to-markdown`. Scripts: `start`, `readme`, `i18n`.
-* `Gruntfile.js` is the JS file containing Grunt tasks. Tasks: `i18n` containing `addtextdomain` and `makepot`, `readme` containing `wp_readme_to_markdown`.
+* `package.json` needed by NPM holds various metadata relevant to the project. Packages: `grunt`, `grunt-fp-i18n` and `grunt-fp-readme-to-markdown`. Scripts: `start`, `readme`, `i18n`.
+* `Gruntfile.js` is the JS file containing Grunt tasks. Tasks: `i18n` containing `addtextdomain` and `makepot`, `readme` containing `fp_readme_to_markdown`.
 * `.editorconfig` is the configuration file for Editor.
 * `.gitignore` tells which files (or patterns) git should ignore.
 * `.distignore` tells which files and folders should be ignored in distribution.
@@ -200,7 +200,7 @@ The following files are also included unless the `--skip-tests` is used:
 
 * `phpunit.xml.dist` is the configuration file for PHPUnit.
 * `.circleci/config.yml` is the configuration file for CircleCI. Use `--ci=<provider>` to select a different service.
-* `bin/install-wp-tests.sh` configures the WordPress test suite and a test database.
+* `bin/install-fp-tests.sh` configures the FinPress test suite and a test database.
 * `tests/bootstrap.php` is the file that makes the current plugin active when running the test suite.
 * `tests/test-sample.php` is a sample file containing test cases.
 * `.phpcs.xml.dist` is a collection of PHP_CodeSniffer rules.
@@ -253,34 +253,34 @@ The following files are also included unless the `--skip-tests` is used:
 
 **EXAMPLES**
 
-    $ wp scaffold plugin sample-plugin
+    $ fp scaffold plugin sample-plugin
     Success: Created plugin files.
     Success: Created test files.
 
 
 
-### wp scaffold plugin-tests
+### fp scaffold plugin-tests
 
 Generates files needed for running PHPUnit tests in a plugin.
 
 ~~~
-wp scaffold plugin-tests [<plugin>] [--dir=<dirname>] [--ci=<provider>] [--force]
+fp scaffold plugin-tests [<plugin>] [--dir=<dirname>] [--ci=<provider>] [--force]
 ~~~
 
 The following files are generated by default:
 
 * `phpunit.xml.dist` is the configuration file for PHPUnit.
 * `.circleci/config.yml` is the configuration file for CircleCI. Use `--ci=<provider>` to select a different service.
-* `bin/install-wp-tests.sh` configures the WordPress test suite and a test database.
+* `bin/install-fp-tests.sh` configures the FinPress test suite and a test database.
 * `tests/bootstrap.php` is the file that makes the current plugin active when running the test suite.
 * `tests/test-sample.php` is a sample file containing the actual tests.
 * `.phpcs.xml.dist` is a collection of PHP_CodeSniffer rules.
 
-Learn more from the [plugin unit tests documentation](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/).
+Learn more from the [plugin unit tests documentation](https://make.finpress.org/cli/handbook/misc/plugin-unit-tests/).
 
 **ENVIRONMENT**
 
-The `tests/bootstrap.php` file looks for the WP_TESTS_DIR environment
+The `tests/bootstrap.php` file looks for the FP_TESTS_DIR environment
 variable.
 
 **OPTIONS**
@@ -308,17 +308,17 @@ variable.
 **EXAMPLES**
 
     # Generate unit test files for plugin 'sample-plugin'.
-    $ wp scaffold plugin-tests sample-plugin
+    $ fp scaffold plugin-tests sample-plugin
     Success: Created test files.
 
 
 
-### wp scaffold post-type
+### fp scaffold post-type
 
 Generates PHP code for registering a custom post type.
 
 ~~~
-wp scaffold post-type <slug> [--label=<label>] [--textdomain=<textdomain>] [--dashicon=<dashicon>] [--theme] [--plugin=<plugin>] [--raw] [--force]
+fp scaffold post-type <slug> [--label=<label>] [--textdomain=<textdomain>] [--dashicon=<dashicon>] [--theme] [--plugin=<plugin>] [--raw] [--force]
 ~~~
 
 **OPTIONS**
@@ -351,17 +351,17 @@ wp scaffold post-type <slug> [--label=<label>] [--textdomain=<textdomain>] [--da
 **EXAMPLES**
 
     # Generate a 'movie' post type for the 'simple-life' theme
-    $ wp scaffold post-type movie --label=Movie --theme=simple-life
-    Success: Created '/var/www/example.com/public_html/wp-content/themes/simple-life/post-types/movie.php'.
+    $ fp scaffold post-type movie --label=Movie --theme=simple-life
+    Success: Created '/var/www/example.com/public_html/fp-content/themes/simple-life/post-types/movie.php'.
 
 
 
-### wp scaffold taxonomy
+### fp scaffold taxonomy
 
 Generates PHP code for registering a custom taxonomy.
 
 ~~~
-wp scaffold taxonomy <slug> [--post_types=<post-types>] [--label=<label>] [--textdomain=<textdomain>] [--theme] [--plugin=<plugin>] [--raw] [--force]
+fp scaffold taxonomy <slug> [--post_types=<post-types>] [--label=<label>] [--textdomain=<textdomain>] [--theme] [--plugin=<plugin>] [--raw] [--force]
 ~~~
 
 **OPTIONS**
@@ -394,32 +394,32 @@ wp scaffold taxonomy <slug> [--post_types=<post-types>] [--label=<label>] [--tex
 **EXAMPLES**
 
     # Generate PHP code for registering a custom taxonomy and save in a file
-    $ wp scaffold taxonomy venue --post_types=event,presentation > taxonomy.php
+    $ fp scaffold taxonomy venue --post_types=event,presentation > taxonomy.php
 
 
 
-### wp scaffold theme-tests
+### fp scaffold theme-tests
 
 Generates files needed for running PHPUnit tests in a theme.
 
 ~~~
-wp scaffold theme-tests [<theme>] [--dir=<dirname>] [--ci=<provider>] [--force]
+fp scaffold theme-tests [<theme>] [--dir=<dirname>] [--ci=<provider>] [--force]
 ~~~
 
 The following files are generated by default:
 
 * `phpunit.xml.dist` is the configuration file for PHPUnit.
 * `.circleci/config.yml` is the configuration file for CircleCI. Use `--ci=<provider>` to select a different service.
-* `bin/install-wp-tests.sh` configures the WordPress test suite and a test database.
+* `bin/install-fp-tests.sh` configures the FinPress test suite and a test database.
 * `tests/bootstrap.php` is the file that makes the current theme active when running the test suite.
 * `tests/test-sample.php` is a sample file containing the actual tests.
 * `.phpcs.xml.dist` is a collection of PHP_CodeSniffer rules.
 
-Learn more from the [plugin unit tests documentation](https://make.wordpress.org/cli/handbook/misc/plugin-unit-tests/).
+Learn more from the [plugin unit tests documentation](https://make.finpress.org/cli/handbook/misc/plugin-unit-tests/).
 
 **ENVIRONMENT**
 
-The `tests/bootstrap.php` file looks for the WP_TESTS_DIR environment
+The `tests/bootstrap.php` file looks for the FP_TESTS_DIR environment
 variable.
 
 **OPTIONS**
@@ -447,16 +447,16 @@ variable.
 **EXAMPLES**
 
     # Generate unit test files for theme 'twentysixteenchild'.
-    $ wp scaffold theme-tests twentysixteenchild
+    $ fp scaffold theme-tests twentysixteenchild
     Success: Created test files.
 
 ## Installing
 
-This package is included with WP-CLI itself, no additional installation necessary.
+This package is included with FP-CLI itself, no additional installation necessary.
 
-To install the latest version of this package over what's included in WP-CLI, run:
+To install the latest version of this package over what's included in FP-CLI, run:
 
-    wp package install git@github.com:wp-cli/scaffold-command.git
+    fp package install git@github.com:fp-cli/scaffold-command.git
 
 ## Contributing
 
@@ -464,25 +464,25 @@ We appreciate you taking the initiative to contribute to this project.
 
 Contributing isn’t limited to just code. We encourage you to contribute in the way that best fits your abilities, by writing tutorials, giving a demo at your local meetup, helping other users with their support questions, or revising our documentation.
 
-For a more thorough introduction, [check out WP-CLI's guide to contributing](https://make.wordpress.org/cli/handbook/contributing/). This package follows those policy and guidelines.
+For a more thorough introduction, [check out FP-CLI's guide to contributing](https://make.finpress.org/cli/handbook/contributing/). This package follows those policy and guidelines.
 
 ### Reporting a bug
 
 Think you’ve found a bug? We’d love for you to help us get it fixed.
 
-Before you create a new issue, you should [search existing issues](https://github.com/wp-cli/scaffold-command/issues?q=label%3Abug%20) to see if there’s an existing resolution to it, or if it’s already been fixed in a newer version.
+Before you create a new issue, you should [search existing issues](https://github.com/fp-cli/scaffold-command/issues?q=label%3Abug%20) to see if there’s an existing resolution to it, or if it’s already been fixed in a newer version.
 
-Once you’ve done a bit of searching and discovered there isn’t an open or fixed issue for your bug, please [create a new issue](https://github.com/wp-cli/scaffold-command/issues/new). Include as much detail as you can, and clear steps to reproduce if possible. For more guidance, [review our bug report documentation](https://make.wordpress.org/cli/handbook/bug-reports/).
+Once you’ve done a bit of searching and discovered there isn’t an open or fixed issue for your bug, please [create a new issue](https://github.com/fp-cli/scaffold-command/issues/new). Include as much detail as you can, and clear steps to reproduce if possible. For more guidance, [review our bug report documentation](https://make.finpress.org/cli/handbook/bug-reports/).
 
 ### Creating a pull request
 
-Want to contribute a new feature? Please first [open a new issue](https://github.com/wp-cli/scaffold-command/issues/new) to discuss whether the feature is a good fit for the project.
+Want to contribute a new feature? Please first [open a new issue](https://github.com/fp-cli/scaffold-command/issues/new) to discuss whether the feature is a good fit for the project.
 
-Once you've decided to commit the time to seeing your pull request through, [please follow our guidelines for creating a pull request](https://make.wordpress.org/cli/handbook/pull-requests/) to make sure it's a pleasant experience. See "[Setting up](https://make.wordpress.org/cli/handbook/pull-requests/#setting-up)" for details specific to working on this package locally.
+Once you've decided to commit the time to seeing your pull request through, [please follow our guidelines for creating a pull request](https://make.finpress.org/cli/handbook/pull-requests/) to make sure it's a pleasant experience. See "[Setting up](https://make.finpress.org/cli/handbook/pull-requests/#setting-up)" for details specific to working on this package locally.
 
 ## Support
 
-GitHub issues aren't for general support questions, but there are other venues you can try: https://wp-cli.org/#support
+GitHub issues aren't for general support questions, but there are other venues you can try: https://fp-cli.org/#support
 
 
-*This README.md is generated dynamically from the project's codebase using `wp scaffold package-readme` ([doc](https://github.com/wp-cli/scaffold-package-command#wp-scaffold-package-readme)). To suggest changes, please submit a pull request against the corresponding part of the codebase.*
+*This README.md is generated dynamically from the project's codebase using `fp scaffold package-readme` ([doc](https://github.com/fp-cli/scaffold-package-command#fp-scaffold-package-readme)). To suggest changes, please submit a pull request against the corresponding part of the codebase.*

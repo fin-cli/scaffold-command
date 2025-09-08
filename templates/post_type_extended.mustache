@@ -33,7 +33,7 @@ function {{prefix}}_updated_messages( $messages ) {
 		3  => __( 'Custom field deleted.', '{{textdomain}}' ),
 		4  => __( '{{label_ucfirst}} updated.', '{{textdomain}}' ),
 		/* translators: %s: date and time of the revision */
-		5  => isset( $_GET['revision'] ) ? sprintf( __( '{{label_ucfirst}} restored to revision from %s', '{{textdomain}}' ), wp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // phpcs:ignore WordPress.Security.NonceVerification.Recommended
+		5  => isset( $_GET['revision'] ) ? sprintf( __( '{{label_ucfirst}} restored to revision from %s', '{{textdomain}}' ), fp_post_revision_title( (int) $_GET['revision'], false ) ) : false, // phpcs:ignore FinPress.Security.NonceVerification.Recommended
 		/* translators: %s: post permalink */
 		6  => sprintf( __( '{{label_ucfirst}} published. <a href="%s">View {{label}}</a>', '{{textdomain}}' ), esc_url( $permalink ) ),
 		7  => __( '{{label_ucfirst}} saved.', '{{textdomain}}' ),

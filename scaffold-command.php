@@ -1,12 +1,12 @@
 <?php
 
-if ( ! class_exists( 'WP_CLI' ) ) {
+if ( ! class_exists( 'FP_CLI' ) ) {
 	return;
 }
 
-$wpcli_scaffold_autoloader = __DIR__ . '/vendor/autoload.php';
-if ( file_exists( $wpcli_scaffold_autoloader ) ) {
-	require_once $wpcli_scaffold_autoloader;
+$fpcli_scaffold_autoloader = __DIR__ . '/vendor/autoload.php';
+if ( file_exists( $fpcli_scaffold_autoloader ) ) {
+	require_once $fpcli_scaffold_autoloader;
 }
 
-WP_CLI::add_command( 'scaffold', 'Scaffold_Command' );
+FP_CLI::add_command( 'scaffold', 'Scaffold_Command' );

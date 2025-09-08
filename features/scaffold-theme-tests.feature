@@ -1,16 +1,16 @@
 Feature: Scaffold theme unit tests
 
   Background:
-    Given a WP install
-    And I try `wp theme install twentytwelve --force`
-    And I run `wp scaffold child-theme t12child --parent_theme=twentytwelve`
+    Given a FP install
+    And I try `fp theme install twentytwelve --force`
+    And I run `fp scaffold child-theme t12child --parent_theme=twentytwelve`
 
-    When I run `wp theme path`
+    When I run `fp theme path`
     Then save STDOUT as {THEME_DIR}
 
   @require-php-7.0 @less-than-php-7.2 @require-mysql
   Scenario: Scaffold theme tests
-    When I run `wp scaffold theme-tests t12child`
+    When I run `fp scaffold theme-tests t12child`
     Then STDOUT should not be empty
     And the {THEME_DIR}/t12child/tests directory should contain:
       """
@@ -31,7 +31,7 @@ Feature: Scaffold theme unit tests
       """
     And the {THEME_DIR}/t12child/bin directory should contain:
       """
-      install-wp-tests.sh
+      install-fp-tests.sh
       """
     And the {THEME_DIR}/t12child/phpunit.xml.dist file should contain:
       """
@@ -63,24 +63,24 @@ Feature: Scaffold theme unit tests
             - php74-build
       """
 
-    When I run `wp eval "if ( is_executable( '{THEME_DIR}/t12child/bin/install-wp-tests.sh' ) ) { echo 'executable'; } else { exit( 1 ); }"`
+    When I run `fp eval "if ( is_executable( '{THEME_DIR}/t12child/bin/install-fp-tests.sh' ) ) { echo 'executable'; } else { exit( 1 ); }"`
     Then STDOUT should be:
       """
       executable
       """
 
     # Warning: overwriting generated functions.php file, so functions.php file loaded only tests beyond here...
-    Given a wp-content/themes/t12child/functions.php file:
+    Given a fp-content/themes/t12child/functions.php file:
       """
       <?php echo __FILE__ . " loaded.\n";
       """
     # This throws a warning for the password provided via command line.
-    And I try `mysql -u{DB_USER} -p{DB_PASSWORD} -h{MYSQL_HOST} -P{MYSQL_PORT} --protocol=tcp -e "DROP DATABASE IF EXISTS wp_cli_test_scaffold"`
+    And I try `mysql -u{DB_USER} -p{DB_PASSWORD} -h{MYSQL_HOST} -P{MYSQL_PORT} --protocol=tcp -e "DROP DATABASE IF EXISTS fp_cli_test_scaffold"`
 
-    And I try `WP_TESTS_DIR={RUN_DIR}/wordpress-tests-lib WP_CORE_DIR={RUN_DIR}/wordpress {THEME_DIR}/t12child/bin/install-wp-tests.sh wp_cli_test_scaffold {DB_USER} {DB_PASSWORD} {DB_HOST} latest`
+    And I try `FP_TESTS_DIR={RUN_DIR}/finpress-tests-lib FP_CORE_DIR={RUN_DIR}/finpress {THEME_DIR}/t12child/bin/install-fp-tests.sh fp_cli_test_scaffold {DB_USER} {DB_PASSWORD} {DB_HOST} latest`
     Then the return code should be 0
 
-    When I run `cd {THEME_DIR}/t12child; WP_TESTS_DIR={RUN_DIR}/wordpress-tests-lib phpunit`
+    When I run `cd {THEME_DIR}/t12child; FP_TESTS_DIR={RUN_DIR}/finpress-tests-lib phpunit`
     Then STDOUT should contain:
       """
       t12child/functions.php loaded.
@@ -94,7 +94,7 @@ Feature: Scaffold theme unit tests
       No tests executed!
       """
 
-    When I run `cd {THEME_DIR}/t12child; WP_MULTISITE=1 WP_TESTS_DIR={RUN_DIR}/wordpress-tests-lib phpunit`
+    When I run `cd {THEME_DIR}/t12child; FP_MULTISITE=1 FP_TESTS_DIR={RUN_DIR}/finpress-tests-lib phpunit`
     Then STDOUT should contain:
       """
       t12child/functions.php loaded.
@@ -109,7 +109,7 @@ Feature: Scaffold theme unit tests
       """
 
   Scenario: Scaffold theme tests invalid theme
-    When I try `wp scaffold theme-tests p3child`
+    When I try `fp scaffold theme-tests p3child`
     Then STDERR should be:
       """
       Error: Invalid theme slug specified. The theme 'p3child' does not exist.
@@ -117,7 +117,7 @@ Feature: Scaffold theme unit tests
     And the return code should be 1
 
   Scenario: Scaffold theme tests with Circle as the provider
-    When I run `wp scaffold theme-tests t12child --ci=circle`
+    When I run `fp scaffold theme-tests t12child --ci=circle`
     Then STDOUT should not be empty
     And the {THEME_DIR}/t12child/circle.yml file should not exist
     And the {THEME_DIR}/t12child/.circleci/config.yml file should contain:
@@ -150,7 +150,7 @@ Feature: Scaffold theme unit tests
       """
 
   Scenario: Scaffold theme tests with Gitlab as the provider
-    When I run `wp scaffold theme-tests t12child --ci=gitlab`
+    When I run `fp scaffold theme-tests t12child --ci=gitlab`
     Then STDOUT should not be empty
     And the {THEME_DIR}/t12child/.gitlab-ci.yml file should contain:
       """
@@ -158,7 +158,7 @@ Feature: Scaffold theme unit tests
       """
 
   Scenario: Scaffold theme tests with Bitbucket Pipelines as the provider
-    When I run `wp scaffold theme-tests t12child --ci=bitbucket`
+    When I run `fp scaffold theme-tests t12child --ci=bitbucket`
     Then STDOUT should not be empty
     And the {THEME_DIR}/t12child/bitbucket-pipelines.yml file should contain:
       """
@@ -199,28 +199,28 @@ Feature: Scaffold theme unit tests
           database:
             image: mysql:latest
             environment:
-              MYSQL_DATABASE: 'wordpress_tests'
+              MYSQL_DATABASE: 'finpress_tests'
               MYSQL_ROOT_PASSWORD: 'root'
       """
 
   Scenario: Scaffold theme tests with invalid slug
 
-    When I try `wp scaffold theme-tests .`
+    When I try `fp scaffold theme-tests .`
     Then STDERR should be:
       """
       Error: Invalid theme slug specified. The slug cannot be '.' or '..'.
       """
     And the return code should be 1
 
-    When I try `wp scaffold theme-tests ../`
+    When I try `fp scaffold theme-tests ../`
     Then STDERR should be:
       """
-      Error: Invalid theme slug specified. The target directory '{RUN_DIR}/wp-content/themes/../' is not in '{RUN_DIR}/wp-content/themes'.
+      Error: Invalid theme slug specified. The target directory '{RUN_DIR}/fp-content/themes/../' is not in '{RUN_DIR}/fp-content/themes'.
       """
     And the return code should be 1
 
   Scenario: Scaffold theme tests with invalid directory
-    When I try `wp scaffold theme-tests twentytwelve --dir=non-existent-dir`
+    When I try `fp scaffold theme-tests twentytwelve --dir=non-existent-dir`
     Then STDERR should be:
       """
       Error: Invalid theme directory specified. No such directory 'non-existent-dir'.
@@ -231,7 +231,7 @@ Feature: Scaffold theme unit tests
     When I run `mv -f {THEME_DIR}/twentytwelve {THEME_DIR}/hide-twentytwelve && touch {THEME_DIR}/twentytwelve`
     Then the return code should be 0
 
-    When I try `wp scaffold theme-tests twentytwelve`
+    When I try `fp scaffold theme-tests twentytwelve`
     Then STDERR should be:
       """
       Error: Invalid theme slug specified. No such target directory '{THEME_DIR}/twentytwelve'.
@@ -247,7 +247,7 @@ Feature: Scaffold theme unit tests
     When I run `mv -f {THEME_DIR} {RUN_DIR}/alt-themes && ln -s {RUN_DIR}/alt-themes {THEME_DIR}`
     Then the return code should be 0
 
-    When I run `wp scaffold theme-tests twentytwelve`
+    When I run `fp scaffold theme-tests twentytwelve`
     Then STDOUT should not be empty
     And the {THEME_DIR}/twentytwelve/tests directory should contain:
       """

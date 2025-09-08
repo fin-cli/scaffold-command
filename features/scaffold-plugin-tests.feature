@@ -1,18 +1,18 @@
 Feature: Scaffold plugin unit tests
 
   Scenario: Scaffold plugin tests
-    Given a WP install
-    When I run `wp plugin path`
+    Given a FP install
+    When I run `fp plugin path`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin hello-world --skip-tests`
+    When I run `fp scaffold plugin hello-world --skip-tests`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/hello-world/.editorconfig file should exist
     And the {PLUGIN_DIR}/hello-world/hello-world.php file should exist
     And the {PLUGIN_DIR}/hello-world/readme.txt file should exist
     And the {PLUGIN_DIR}/hello-world/tests directory should not exist
 
-    When I run `wp scaffold plugin-tests hello-world`
+    When I run `fp scaffold plugin-tests hello-world`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/hello-world/tests directory should contain:
       """
@@ -33,7 +33,7 @@ Feature: Scaffold plugin unit tests
       """
     And the {PLUGIN_DIR}/hello-world/bin directory should contain:
       """
-      install-wp-tests.sh
+      install-fp-tests.sh
       """
     And the {PLUGIN_DIR}/hello-world/phpunit.xml.dist file should contain:
       """
@@ -66,17 +66,17 @@ Feature: Scaffold plugin unit tests
             - php74-build
       """
 
-    When I run `wp eval "if ( is_executable( '{PLUGIN_DIR}/hello-world/bin/install-wp-tests.sh' ) ) { echo 'executable'; } else { exit( 1 ); }"`
+    When I run `fp eval "if ( is_executable( '{PLUGIN_DIR}/hello-world/bin/install-fp-tests.sh' ) ) { echo 'executable'; } else { exit( 1 ); }"`
     Then STDOUT should be:
       """
       executable
       """
 
   Scenario: Scaffold plugin tests with Circle as the provider, part one
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --ci=circle`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --ci=circle`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
     And the {PLUGIN_DIR}/circle.yml file should not exist
     And the {PLUGIN_DIR}/.circleci/config.yml file should contain:
@@ -109,13 +109,13 @@ Feature: Scaffold plugin unit tests
       """
 
   Scenario: Scaffold plugin tests with Circle as the provider, part two
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --skip-tests`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --skip-tests`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin-tests hello-world --ci=circle`
+    When I run `fp scaffold plugin-tests hello-world --ci=circle`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/circle.yml file should not exist
     And the {PLUGIN_DIR}/.circleci/config.yml file should contain:
@@ -124,31 +124,31 @@ Feature: Scaffold plugin unit tests
       """
     And the {PLUGIN_DIR}/.circleci/config.yml file should contain:
       """
-                  rm -rf $WP_TESTS_DIR $WP_CORE_DIR
-                  bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 4.5 $SKIP_DB_CREATE
+                  rm -rf $FP_TESTS_DIR $FP_CORE_DIR
+                  bash bin/install-fp-tests.sh finpress_test root '' 127.0.0.1 4.5 $SKIP_DB_CREATE
                   phpunit
-                  WP_MULTISITE=1 phpunit
+                  FP_MULTISITE=1 phpunit
                   SKIP_DB_CREATE=true
-                  rm -rf $WP_TESTS_DIR $WP_CORE_DIR
-                  bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 latest $SKIP_DB_CREATE
+                  rm -rf $FP_TESTS_DIR $FP_CORE_DIR
+                  bash bin/install-fp-tests.sh finpress_test root '' 127.0.0.1 latest $SKIP_DB_CREATE
                   phpunit
-                  WP_MULTISITE=1 phpunit
+                  FP_MULTISITE=1 phpunit
                   SKIP_DB_CREATE=true
-                  rm -rf $WP_TESTS_DIR $WP_CORE_DIR
-                  bash bin/install-wp-tests.sh wordpress_test root '' 127.0.0.1 trunk $SKIP_DB_CREATE
+                  rm -rf $FP_TESTS_DIR $FP_CORE_DIR
+                  bash bin/install-fp-tests.sh finpress_test root '' 127.0.0.1 trunk $SKIP_DB_CREATE
                   phpunit
-                  WP_MULTISITE=1 phpunit
+                  FP_MULTISITE=1 phpunit
                   SKIP_DB_CREATE=true
       """
 
   Scenario: Scaffold plugin tests with Gitlab as the provider
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --skip-tests`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --skip-tests`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin-tests hello-world --ci=gitlab`
+    When I run `fp scaffold plugin-tests hello-world --ci=gitlab`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/.gitlab-ci.yml file should contain:
       """
@@ -156,13 +156,13 @@ Feature: Scaffold plugin unit tests
       """
 
   Scenario: Scaffold plugin tests with Bitbucket Pipelines as the provider
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --skip-tests`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --skip-tests`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin-tests hello-world --ci=bitbucket`
+    When I run `fp scaffold plugin-tests hello-world --ci=bitbucket`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/bitbucket-pipelines.yml file should contain:
       """
@@ -203,43 +203,43 @@ Feature: Scaffold plugin unit tests
           database:
             image: mysql:latest
             environment:
-              MYSQL_DATABASE: 'wordpress_tests'
+              MYSQL_DATABASE: 'finpress_tests'
               MYSQL_ROOT_PASSWORD: 'root'
       """
 
   Scenario: Scaffold plugin tests with invalid slug
-    Given a WP install
-    Then the {RUN_DIR}/wp-content/plugins/hello.php file should exist
+    Given a FP install
+    Then the {RUN_DIR}/fp-content/plugins/hello.php file should exist
 
-    When I try `wp scaffold plugin-tests hello`
+    When I try `fp scaffold plugin-tests hello`
     Then STDERR should be:
       """
-      Error: Invalid plugin slug specified. No such target directory '{RUN_DIR}/wp-content/plugins/hello'.
+      Error: Invalid plugin slug specified. No such target directory '{RUN_DIR}/fp-content/plugins/hello'.
       """
     And the return code should be 1
 
-    When I try `wp scaffold plugin-tests .`
+    When I try `fp scaffold plugin-tests .`
     Then STDERR should be:
       """
       Error: Invalid plugin slug specified. The slug cannot be '.' or '..'.
       """
     And the return code should be 1
 
-    When I try `wp scaffold plugin-tests ../`
+    When I try `fp scaffold plugin-tests ../`
     Then STDERR should be:
       """
-      Error: Invalid plugin slug specified. The target directory '{RUN_DIR}/wp-content/plugins/../' is not in '{RUN_DIR}/wp-content/plugins'.
+      Error: Invalid plugin slug specified. The target directory '{RUN_DIR}/fp-content/plugins/../' is not in '{RUN_DIR}/fp-content/plugins'.
       """
     And the return code should be 1
 
   Scenario: Scaffold plugin tests with invalid directory
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --skip-tests`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --skip-tests`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I try `wp scaffold plugin-tests hello-world --dir=non-existent-dir`
+    When I try `fp scaffold plugin-tests hello-world --dir=non-existent-dir`
     Then STDERR should be:
       """
       Error: Invalid plugin directory specified. No such directory 'non-existent-dir'.
@@ -248,7 +248,7 @@ Feature: Scaffold plugin unit tests
 
     When I run `rm -rf {PLUGIN_DIR} && touch {PLUGIN_DIR}`
     Then the return code should be 0
-    When I try `wp scaffold plugin-tests hello-world`
+    When I try `fp scaffold plugin-tests hello-world`
     Then STDERR should be:
       """
       Error: Invalid plugin slug specified. No such target directory '{PLUGIN_DIR}'.
@@ -256,16 +256,16 @@ Feature: Scaffold plugin unit tests
     And the return code should be 1
 
   Scenario: Scaffold plugin tests with a symbolic link
-    Given a WP install
-    And I run `wp scaffold plugin hello-world --skip-tests`
+    Given a FP install
+    And I run `fp scaffold plugin hello-world --skip-tests`
 
-    When I run `wp plugin path hello-world --dir`
+    When I run `fp plugin path hello-world --dir`
     Then save STDOUT as {PLUGIN_DIR}
 
     When I run `mv {PLUGIN_DIR} {RUN_DIR} && ln -s {RUN_DIR}/hello-world {PLUGIN_DIR}`
     Then the return code should be 0
 
-    When I run `wp scaffold plugin-tests hello-world`
+    When I run `fp scaffold plugin-tests hello-world`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/tests directory should contain:
       """
@@ -273,8 +273,8 @@ Feature: Scaffold plugin unit tests
       """
 
   Scenario: Scaffold plugin tests with custom main file
-    Given a WP install
-    And a wp-content/plugins/foo/bar.php file:
+    Given a FP install
+    And a fp-content/plugins/foo/bar.php file:
       """
       <?php
       /**
@@ -291,18 +291,18 @@ Feature: Scaffold plugin unit tests
        */
       """
 
-    When I run `wp scaffold plugin-tests foo`
-    Then the wp-content/plugins/foo/tests/bootstrap.php file should contain:
+    When I run `fp scaffold plugin-tests foo`
+    Then the fp-content/plugins/foo/tests/bootstrap.php file should contain:
       """
       require dirname( dirname( __FILE__ ) ) . '/bar.php';
       """
 
   Scenario: Accept bitbucket as valid CI in plugin scaffold
-    Given a WP install
-    When I run `wp plugin path`
+    Given a FP install
+    When I run `fp plugin path`
     Then save STDOUT as {PLUGIN_DIR}
 
-    When I run `wp scaffold plugin hello-world --ci=bitbucket`
+    When I run `fp scaffold plugin hello-world --ci=bitbucket`
     Then STDOUT should not be empty
     And the {PLUGIN_DIR}/hello-world/.editorconfig file should exist
     And the {PLUGIN_DIR}/hello-world/hello-world.php file should exist

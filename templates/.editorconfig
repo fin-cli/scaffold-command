@@ -1,8 +1,8 @@
 # This file is for unifying the coding style for different editors and IDEs
 # editorconfig.org
 
-# WordPress Coding Standards
-# https://make.wordpress.org/core/handbook/coding-standards/
+# FinPress Coding Standards
+# https://make.finpress.org/core/handbook/coding-standards/
 
 root = true
 
@@ -18,5 +18,5 @@ indent_size = 4
 indent_style = space
 indent_size = 2
 
-[{*.txt,wp-config-sample.php}]
+[{*.txt,fp-config-sample.php}]
 end_of_line = crlf

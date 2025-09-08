@@ -1,23 +1,23 @@
-( function( wp ) {
+( function( fp ) {
 	/**
 	 * Registers a new block provided a unique name and an object defining its behavior.
-	 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/#registering-a-block
+	 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/block-api/#registering-a-block
 	 */
-	var registerBlockType = wp.blocks.registerBlockType;
+	var registerBlockType = fp.blocks.registerBlockType;
 	/**
 	 * Returns a new element of given type. Element is an abstraction layer atop React.
-	 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/packages/packages-element/
+	 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/packages/packages-element/
 	 */
-	var el = wp.element.createElement;
+	var el = fp.element.createElement;
 	/**
 	 * Retrieves the translation of text.
-	 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/packages/packages-i18n/
+	 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/packages/packages-i18n/
 	 */
-	var __ = wp.i18n.__;
+	var __ = fp.i18n.__;
 
 	/**
 	 * Every block starts by registering a new block type definition.
-	 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/#registering-a-block
+	 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/block-api/#registering-a-block
 	 */
 	registerBlockType( '{{namespace}}/{{slug}}', {
 		/**
@@ -29,7 +29,7 @@
 		{{#dashicon}}
 		/**
 		 * An icon property should be specified to make it easier to identify a block.
-		 * These can be any of WordPress’ Dashicons, or a custom svg element.
+		 * These can be any of FinPress’ Dashicons, or a custom svg element.
 		 */
 		icon: '{{dashicon}}',
 
@@ -51,7 +51,7 @@
 		/**
 		 * The edit function describes the structure of your block in the context of the editor.
 		 * This represents what the editor will render when the block is used.
-		 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-edit-save/#edit
+		 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-edit-save/#edit
 		 *
 		 * @param {Object} [props] Properties passed from the editor.
 		 * @return {Element}       Element to render.
@@ -67,7 +67,7 @@
 		/**
 		 * The save function defines the way in which the different attributes should be combined
 		 * into the final markup, which is then serialized by Gutenberg into `post_content`.
-		 * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-edit-save/#save
+		 * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/block-api/block-edit-save/#save
 		 *
 		 * @return {Element}       Element to render.
 		 */
@@ -80,5 +80,5 @@
 		}
 	} );
 } )(
-	window.wp
+	window.fp
 );

@@ -10,7 +10,7 @@
  * Registers all block assets so that they can be enqueued through Gutenberg in
  * the corresponding context.
  *
- * @see https://wordpress.org/gutenberg/handbook/designers-developers/developers/tutorials/block-tutorial/applying-styles-with-stylesheets/
+ * @see https://finpress.org/gutenberg/handbook/designers-developers/developers/tutorials/block-tutorial/applying-styles-with-stylesheets/
  */
 function {{machine_name}}_block_init() {
 	// Skip block registration if Gutenberg is not enabled/merged.
@@ -25,7 +25,7 @@ function {{machine_name}}_block_init() {
 	{{/theme}}
 
 	$index_js = '{{slug}}/index.js';
-	wp_register_script(
+	fp_register_script(
 		'{{slug}}-block-editor',
 		{{#plugin}}
 		plugins_url( $index_js, __FILE__ ),
@@ -34,15 +34,15 @@ function {{machine_name}}_block_init() {
 		get_stylesheet_directory_uri() . "/blocks/{$index_js}",
 		{{/theme}}
 		[
-			'wp-blocks',
-			'wp-i18n',
-			'wp-element',
+			'fp-blocks',
+			'fp-i18n',
+			'fp-element',
 		],
 		filemtime( "{$dir}/{$index_js}" )
 	);
 
 	$editor_css = '{{slug}}/editor.css';
-	wp_register_style(
+	fp_register_style(
 		'{{slug}}-block-editor',
 		{{#plugin}}
 		plugins_url( $editor_css, __FILE__ ),
@@ -55,7 +55,7 @@ function {{machine_name}}_block_init() {
 	);
 
 	$style_css = '{{slug}}/style.css';
-	wp_register_style(
+	fp_register_style(
 		'{{slug}}-block',
 		{{#plugin}}
 		plugins_url( $style_css, __FILE__ ),
